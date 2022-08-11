@@ -1,7 +1,7 @@
 import environ
 import logging
 
-VERSION = '0.1-mvp'
+VERSION = '0.1-a'
 __version__ = VERSION
 
 _levels = {
