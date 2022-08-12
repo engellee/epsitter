@@ -1,7 +1,7 @@
 import environ
 import logging
 
-VERSION = '0.1-a'
+VERSION = '0.1-alpha'
 __version__ = VERSION
 
 _levels = {
@@ -28,7 +28,7 @@ METRIC_PREFIX = env('METRIC_PREFIX')
 POOL_SIZE = env('POOL_SIZE')
 SERVER_PORT = env('SERVER_PORT')
 POLL_INTERVAL = env('POLL_INTERVAL')
-LOG_LEVEL = _levels[env('LOG_LEVEL')]
+LOG_LEVEL = _levels[str(env('LOG_LEVEL')).upper()]
 LOG_FORMAT = env('LOG_FORMAT')
 REQUEST_TIMEOUT = env('REQUEST_TIMEOUT')
 PROMETHEUS_DISABLE_CREATED_SERIES = env('PROMETHEUS_DISABLE_CREATED_SERIES')

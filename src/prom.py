@@ -8,10 +8,10 @@ def make_metric_name(metric):
 
 # Configure all the metrics here
 request_time_summary = Summary(make_metric_name('request_time'), 'Total time spent requesting URL.',
-                               labelnames=('name', 'method', 'url'))
+                               labelnames=('name', 'method', 'url', 'namespace'))
 
 status_code_counter = Counter(make_metric_name('http_status_code'), 'HTTP Status Code.',
-                              labelnames=('name', 'method', 'url', 'status'))
+                              labelnames=('name', 'method', 'url', 'status', 'namespace'))
 
 
 

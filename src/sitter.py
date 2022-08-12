@@ -21,6 +21,8 @@ class SitterWorker(Thread):
             url_obj = self.queue.get()
             try:
                 do_request(url_obj)
+            except:
+                logging.exception("Request failed for '%s' URL=%s", url_obj['name'], url_obj['url'])
             finally:
                 self.queue.task_done()
 
@@ -51,16 +53,24 @@ def generate_metrics(_config):
 
 
 def do_request(url_object):
+    namespace = 'Unknown'
     auth = None
     method = 'get'
     timeout = settings.REQUEST_TIMEOUT
     headers = {'user-agent': 'epsitter/{}'.format(settings.VERSION)}
+    payload = None
+
+    if 'namespace' in url_object:
+        namespace = url_object['namespace']
 
     if 'timeout' in url_object:
         timeout = url_object['timeout']
 
     if 'method' in url_object:
         method = url_object['method']
+
+    if 'payload' in url_object:
+        payload = url_object['payload']
 
     if 'auth_user' in url_object:
         if 'auth_pass' in url_object:
@@ -73,20 +83,25 @@ def do_request(url_object):
     request_time_metric = prom.request_time_summary.labels(
         name=url_object['name'],
         method=method,
-        url=url_object['url'])
+        url=url_object['url'],
+        namespace=namespace
+    )
 
     with request_time_metric.time():
         http_req = requests.request(method, url_object['url'],
                                     timeout=timeout,
                                     headers=headers,
-                                    auth=auth)
+                                    auth=auth,
+                                    data=payload)
 
     # 2. Record the HTTP status
     status_code_metric = prom.status_code_counter.labels(
         name=url_object['name'],
         method=method,
         url=url_object['url'],
-        status=http_req.status_code)
+        status=http_req.status_code,
+        namespace=namespace)
+
     status_code_metric.inc()
 
     logging.debug("Completed processing '%s' status_code=%s", url_object['name'], str(http_req.status_code))

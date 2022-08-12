@@ -1,5 +1,9 @@
 urls:
   Google:
     url: https://www.google.com
-  Reddit:
-    url: https://www.reddit.com
+    namespace: production
+  Blah:
+    url: https://www.pastebin.com
+    namespace: qa
+    method: post
+    payload: "Anything really."
