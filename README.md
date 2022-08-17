@@ -1,5 +1,5 @@
 # epsitter
-Endpoint Babysitter
+Endpoint Babysitter for Kuberenetes.
 
 I created this project to fulfill the following requirements:
 
@@ -17,6 +17,10 @@ urls:
   my_service:
     url: https://my-app.nspace.svc.cluster.local:8080
     timeout: 10
-  my_other_api:
+  my_api_test:
     url: https://api.nspace.svc.cluster.local:8000
+    auth_user: myUsername
+    auth_pass: myPa55word
+    method: post
+    payload: "The payload goes here"
 ```

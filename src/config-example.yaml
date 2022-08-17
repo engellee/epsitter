@@ -1,0 +1,18 @@
+urls:
+  Google:
+    url: https://www.google.com
+    namespace: production
+  PasteBinApiTest:
+    url: https://pastebin.com/api/api_post.php
+    namespace: qa
+    method: post
+    payload:
+      api_dev_key: xxxxxxxxxxxxxxx
+      api_option: paste
+      api_paste_expire_date: 10M
+      api_paste_private: 2
+      api_paste_code: "Hello World."
+  TestHeaders:
+    url: http://www.xhaus.com/headers
+    headers:
+      x-whoami: lee
