@@ -1,9 +1,0 @@
-urls:
-  Google:
-    url: https://www.google.com
-    namespace: production
-  Blah:
-    url: https://www.pastebin.com
-    namespace: qa
-    method: post
-    payload: "Anything really."

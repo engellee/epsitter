@@ -29,7 +29,7 @@ class SitterWorker(Thread):
 
 def get_config(_config_file):
     if not os.path.exists(_config_file):
-        raise Exception("Config file '%s' does NOT exist!!!. Exiting.", _config_file)
+        raise Exception("Config file '%s' does NOT exist. Exiting.", _config_file)
 
     with open(_config_file) as yfh:
         return yaml.safe_load(yfh)
@@ -59,6 +59,9 @@ def do_request(url_object):
     timeout = settings.REQUEST_TIMEOUT
     headers = {'user-agent': 'epsitter/{}'.format(settings.VERSION)}
     payload = None
+
+    if 'headers' in url_object:
+        headers.update(url_object['headers'])
 
     if 'namespace' in url_object:
         namespace = url_object['namespace']
@@ -94,17 +97,23 @@ def do_request(url_object):
                                     auth=auth,
                                     data=payload)
 
-    # 2. Record the HTTP status
-    status_code_metric = prom.status_code_counter.labels(
-        name=url_object['name'],
-        method=method,
-        url=url_object['url'],
-        status=http_req.status_code,
-        namespace=namespace)
+    if http_req.status_code:
+        prom.status_code_counter.labels(
+            name=url_object['name'],
+            method=method,
+            url=url_object['url'],
+            status=http_req.status_code,
+            namespace=namespace).inc(1)
+    else:
+        prom.http_error_counter.labels(
+            name=url_object['name'],
+            method=method,
+            url=url_object['url'],
+            namespace=namespace).inc(1)
 
-    status_code_metric.inc()
-
-    logging.debug("Completed processing '%s' status_code=%s", url_object['name'], str(http_req.status_code))
+    logging.debug("Response: url=%s Headers=%s", url_object['url'], http_req.headers)
+    logging.debug("Response: url=%s Text=%s", url_object['url'], http_req.text)
+    logging.info("Completed processing '%s'.", url_object['name'])
 
 
 if __name__ == '__main__':
