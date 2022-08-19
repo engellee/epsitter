@@ -83,7 +83,6 @@ def do_request(url_object):
     logging.info("Processing '%s' URL=%s METHOD=%s TIMEOUT=%s",
                  url_object['name'], url_object['url'], method, str(timeout))
 
-    # 1. Record the request time
     request_time_metric = prom.request_time_summary.labels(
         name=url_object['name'],
         method=method,
@@ -92,6 +91,7 @@ def do_request(url_object):
     )
 
     try:
+        # Record the request time
         with request_time_metric.time():
             http_req = requests.request(method, url_object['url'],
                                         timeout=timeout,
@@ -99,6 +99,7 @@ def do_request(url_object):
                                         auth=auth,
                                         data=payload)
     except:
+        # if we fail, record an error
         logging.exception("Failed to connect to '%s'", url_object['url'])
         prom.http_error_counter.labels(
             name=url_object['name'],
@@ -106,6 +107,7 @@ def do_request(url_object):
             url=url_object['url'],
             namespace=namespace).inc(1)
     else:
+        # record the status code
         if http_req.status_code:
             prom.status_code_counter.labels(
                 name=url_object['name'],
