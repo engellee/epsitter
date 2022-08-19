@@ -13,7 +13,7 @@ request_time_summary = Summary(make_metric_name('request_time'), 'Total time spe
 status_code_counter = Counter(make_metric_name('http_status_code'), 'HTTP Status Code.',
                               labelnames=('name', 'method', 'url', 'status', 'namespace'))
 
-http_error_counter = Counter(make_metric_name('http_error_counter'), 'HTTP Error Count.',
+http_error_counter = Counter(make_metric_name('http_error'), 'HTTP Error Count.',
                              labelnames=('name', 'method', 'url', 'namespace'))
 
 
