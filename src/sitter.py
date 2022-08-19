@@ -1,3 +1,4 @@
+from __future__ import with_statement
 import logging
 import os
 import prom
@@ -90,29 +91,31 @@ def do_request(url_object):
         namespace=namespace
     )
 
-    with request_time_metric.time():
-        http_req = requests.request(method, url_object['url'],
-                                    timeout=timeout,
-                                    headers=headers,
-                                    auth=auth,
-                                    data=payload)
-
-    if http_req.status_code:
-        prom.status_code_counter.labels(
-            name=url_object['name'],
-            method=method,
-            url=url_object['url'],
-            status=http_req.status_code,
-            namespace=namespace).inc(1)
-    else:
+    try:
+        with request_time_metric.time():
+            http_req = requests.request(method, url_object['url'],
+                                        timeout=timeout,
+                                        headers=headers,
+                                        auth=auth,
+                                        data=payload)
+    except:
+        logging.exception("Failed to connect to '%s'", url_object['url'])
         prom.http_error_counter.labels(
             name=url_object['name'],
             method=method,
             url=url_object['url'],
             namespace=namespace).inc(1)
+    else:
+        if http_req.status_code:
+            prom.status_code_counter.labels(
+                name=url_object['name'],
+                method=method,
+                url=url_object['url'],
+                status=http_req.status_code,
+                namespace=namespace).inc(1)
+            logging.debug("Response: url=%s Headers=%s", url_object['url'], http_req.headers)
+            logging.debug("Response: url=%s Text=%s", url_object['url'], http_req.text)
 
-    logging.debug("Response: url=%s Headers=%s", url_object['url'], http_req.headers)
-    logging.debug("Response: url=%s Text=%s", url_object['url'], http_req.text)
     logging.info("Completed processing '%s'.", url_object['name'])
 
 

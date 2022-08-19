@@ -13,6 +13,7 @@ urls:
       api_paste_private: 2
       api_paste_code: "Hello World."
   TestHeaders:
+    namespace: qa
     url: http://www.xhaus.com/headers
     headers:
       x-whoami: lee
