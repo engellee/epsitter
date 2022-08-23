@@ -4,13 +4,14 @@ urls:
     namespace: production
   PasteBinApiTest:
     url: https://pastebin.com/api/api_post.php
+    timeout: 30
     namespace: qa
     method: post
     payload:
       api_dev_key: xxxxxxxxxxxxxxx
       api_option: paste
       api_paste_expire_date: 10M
-      api_paste_private: 2
+      api_paste_private: 1
       api_paste_code: "Hello World."
   TestHeaders:
     namespace: qa
