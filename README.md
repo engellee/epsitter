@@ -44,23 +44,14 @@ urls:
 
 [Prometheus Metrics Types](https://prometheus.io/docs/concepts/metric_types/)
 
-| Metric                   | Type | Description                 |
-|--------------------------| ---- |-----------------------------|
-| `sitter_request_time`    | Summary | HTTP request time.          |
-| `sitter_http_status_code` | Counter | Count of HTTP status codes. |
-| `sitter_http_error`       | Counter | Count of connection errors. |
+| Metric                   | Type | Labels                                     | Description                 |
+|--------------------------| ---- |--------------------------------------------|-----------------------------|
+| `sitter_request_time`    | Summary | `name` `method` `url`  `namespace`         | HTTP request time.          |
+| `sitter_http_status_code` | Counter | `name` `method` `url`  `namespace` `status` | Count of HTTP status codes. |
+| `sitter_http_error`       | Counter |  `name` `method` `url`  `namespace` | Count of connection errors. |
 
-## Docker
+## Building
+
+[GitHub Actions](./.github/workflows/) usesd to build the container image.
 
 [epsitter on DockerHub](https://hub.docker.com/repository/docker/lsengel/epsitter)
-
-I try to keep the Dockerfile very small and super simple. Something like this:  
-```
-FROM python:3
-EXPOSE 8989/tcp
-WORKDIR /app
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-COPY src/* ./
-CMD [ "python3", "/app/sitter.py", "/app/sitter.yaml" ]
-```

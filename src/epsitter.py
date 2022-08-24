@@ -122,8 +122,6 @@ def do_request(url_object):
 
 
 if __name__ == '__main__':
-    os.environ['PROMETHEUS_DISABLE_CREATED_SERIES'] = str(settings.PROMETHEUS_DISABLE_CREATED_SERIES)
-
     config_file = 'sitter.yaml'
     if len(sys.argv) > 1:
         config_file = sys.argv[1]
