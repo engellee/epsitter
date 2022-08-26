@@ -29,6 +29,19 @@ urls:
         x-my-custom-header: "Lee was here."
 ```
 
+## Configuration Parameters:
+
+| Parameter | Default     | Description                                    |
+|-----------|-------------|------------------------------------------------|
+| namespace | `Unknown`   | Metric label. Namespace the results.           |
+| url       | *Mandatory* | The target URL to test.                        |
+| auth_user | `None`      | Basic authentication username.                 |
+| auth_pass | `None`      | Basic authentication password.                    |
+| method    | `GET`       | Which HTTP method to use.                      |
+| payload   | `None`      | Key-value pairs of form-encoded data to send.  |
+| headers   | `None`      | Key-value pairs representing headers to send.  |
+| timeout   | `15`        | Request timeout. Overwrites `REQUEST_TIMEOUT`. |
+
 ## Environment Variables
 
 | Env Variable | Default | Description                          |
@@ -55,3 +68,8 @@ urls:
 [GitHub Actions](./.github/workflows/) usesd to build the container image.
 
 [epsitter on DockerHub](https://hub.docker.com/repository/docker/lsengel/epsitter)
+
+## Contact
+
+[Lee Engel](rasengelza@gmail.com)
+
